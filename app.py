@@ -19,7 +19,7 @@ from forms import *
 
 app = Flask(__name__)
 moment = Moment(app)
-#app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:BongSaget$5@localhost:5432/fyyur'
+#app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:whoops$5@localhost:5432/fyyur'
 app.config.from_object('config')
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
@@ -39,14 +39,15 @@ class Venue(db.Model):
     state = db.Column(db.String(120), nullable=False)
     address = db.Column(db.String(120), nullable=False)
     phone = db.Column(db.String(120), nullable=False)
-    genres = db.Column(db.String(120))
+    genres = db.Column("genres", db.ARRAY(db.String()), nullable=False)
     website = db.Column(db.String(120)) 
     image_link = db.Column(db.String(500), nullable=True)
     facebook_link = db.Column(db.String(120), nullable=True)
     seeking_talent = db.Column(db.Boolean(), nullable = False, default = False) 
     seeking_description = db.Column(db.String(500))
-    artist_id = db.Column(db.Integer, db.ForeignKey('Artist.id'), nullable = False)
-    artists = db.relationship('Artist', backref='venue', lazy=True)
+    #relationships
+    #artist_id = db.Column(db.Integer, db.ForeignKey('Artist.id'), nullable = False)
+    #artists = db.relationship('Artist', backref='venue', lazy=True)
     shows = db.relationship('Show', backref='venue', lazy=True)
 
     # TODO: implement any missing fields, as a database migration using Flask-Migrate
@@ -64,10 +65,11 @@ class Artist(db.Model):
     image_link = db.Column(db.String(500), nullable=True)
     facebook_link = db.Column(db.String(120), nullable=True)
     seeking_venue = db.Column(db.Boolean(), nullable = False, default = False)
-    seeking_talent = db.Column(db.String(120), nullable=True)
+    #seeking_talent = db.Column(db.String(120), nullable=True)
     seeking_description = db.Column(db.String(500), nullable=True)
+    #relationships
     shows = db.relationship('Show', backref='artist', lazy=True)
-    venues = db.relationship('Venue', backref='artist', lazy=True)  
+    #venues = db.relationship('Venue', backref='artist', lazy=True)  
 
     # TODO: implement any missing fields, as a database migration using Flask-Migrate
 
@@ -77,10 +79,13 @@ class Show(db.Model):
   __tablename__ = 'Show' 
   
   id = db.Column(db.Integer, primary_key=True)
+  start_time = db.Column(db.DateTime, nullable = False)
+  #foreign keys
   venue_id = db.Column(db.Integer, db.ForeignKey('Venue.id'), nullable = False)
   artist_id = db.Column(db.Integer, db.ForeignKey('Artist.id'), nullable = False)
-  start_time = db.Column(db.DateTime, nullable = False)
-  artists = db.relationship('Artist', backref='shows', lazy=True)
+  #relationships
+  artists = db.relationship('Artist', backref='shows_venue', lazy=True)
+  venues = db.relationship('Venue', backref='shows_artist', lazy=True)
 
 
 #----------------------------------------------------------------------------#
