@@ -26,13 +26,40 @@
       <div class="form-group">
         <label for="genres">Genres</label>
         <small>Ctrl+Click to select multiple</small>
-        {{ form.genres(class_ = 'form-control', placeholder='Genres, separated by commas', id=form.state, autofocus = true) }}
+        {{ form.genres(class_ = 'form-control', placeholder='Genres, separated by commas', autofocus = true) }}
       </div>
       <div class="form-group">
           <label for="genres">Facebook Link</label>
-          {{ form.facebook_link(class_ = 'form-control', placeholder='http://', id=form.state, autofocus = true) }}
+          {{ form.facebook_link(class_ = 'form-control', placeholder='http://', autofocus = true) }}
         </div>
-      <input type="submit" value="Create Venue" class="btn btn-primary btn-lg btn-block">
+      <div class="form-group">
+        <label for="website">Website</label>
+        {{ form.website(class_ = 'form-control', placeholder='http://', autofocus = true) }}
+      </div>
+      <div class="form-group">
+        <label for="image_link">Image Link</label>
+        {{ form.image_link(class_ = 'form-control', placeholder='http://', autofocus = true) }}
+      </div>
+
+      <script type="text/javascript">
+        function ShowHideDiv(chkDescription) {
+            var dvDescription = document.getElementById("dvDescription");
+            dvDescription.style.display = chkDescription.checked ? "block" : "none";
+        }
+      </script>
+
+      <div class="form-group">
+        {{ form.seeking_venue(class_ = 'form-check-input', type='checkbox', checked = '', id = 'chkDescription', onclick = 'ShowHideDiv(this)', autofocus = true) }} 
+        <label for="seeking-venue">&nbsp;&nbsp;&nbsp;&nbsp;Seeking Venue</label> 
+      </div>
+
+      <div class="form-group", id = "dvDescription" >
+          <label for="seeking_description">Description</label>
+          {{ form.seeking_description(class_ = 'form-control', placeholder='Describe venue', autofocus = true) }}
+      </div>
+
+      <input type="submit" value="Create Artist" class="btn btn-primary btn-lg btn-block">
+      {{ form.csrf_token() }}
     </form>
   </div>
 {% endblock %}

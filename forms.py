@@ -1,7 +1,9 @@
 from datetime import datetime
 from flask_wtf import Form
-from wtforms import StringField, SelectField, SelectMultipleField, DateTimeField
-from wtforms.validators import DataRequired, AnyOf, URL
+from wtforms import StringField, SelectField, SelectMultipleField, DateTimeField, BooleanField, ValidationError, validators as v
+from wtforms.validators import DataRequired, AnyOf, URL, Regexp, Optional, StopValidation
+#from flask import request
+
 
 class ShowForm(Form):
     artist_id = StringField(
@@ -116,6 +118,22 @@ class VenueForm(Form):
     facebook_link = StringField(
         'facebook_link', validators=[URL()]
     )
+    website = StringField(
+        'website', validators=[Optional(), URL(message=': Invalid URL.')]
+    )
+    image_link = StringField(
+        'image_link', validators=[DataRequired(), URL(message=': Invalid URL.')]
+    )
+    seeking_talent = BooleanField(
+        'seeking_talent', default = False
+    )
+    if 'seeking_talent' in request.form:
+        seeking_talent = True
+    else:
+        seeking_talent = False
+    seeking_description = StringField(
+        'seeking_description', validators=[Optional(strip_whitespace=True)]
+    )
 
 class ArtistForm(Form):
     name = StringField(
@@ -215,6 +233,19 @@ class ArtistForm(Form):
     facebook_link = StringField(
         # TODO implement enum restriction
         'facebook_link', validators=[URL()]
+    )
+    website = StringField(
+        'website', validators=[Optional(), URL(message=': Invalid URL.')]
+    )
+    seeking_venue = BooleanField(
+        'seeking_venue', default = False
+    )
+    if 'seeking_venue' in request.form:
+        seeking_venue = True
+    else:
+        seeking_venue = False
+    seeking_description = StringField(
+        'seeking_description', validators=[Optional(strip_whitespace=True)]
     )
 
 # TODO IMPLEMENT NEW ARTIST FORM AND NEW SHOW FORM
